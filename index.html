@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PetLovers Club</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🐾 PetLovers Club</h1>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="carrinho.html">Carrinho (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Produtos em Destaque</h2>
+    <div class="products">
+
+      <div class="product">
+        <img src="https://images-americanas.b2w.io/produtos/3997751075/imagens/comedouro-interativo-petisco-racao-caes-gatos-brinquedo-pet-brinquedo-interativo-para-caes-e-gatos-ball-verde/3997751075_1_large.jpg" alt="Brinquedo Interativo para Gatos">
+        <h3>Brinquedo Interativo</h3>
+        <p>R$ 39,90</p>
+        <button onclick="addToCart('Brinquedo Interativo', 39.90)">Adicionar ao Carrinho</button>
+        <br><a href="produto1.html">Ver mais</a>
+      </div>
+
+      <div class="product">
+        <img src="https://images.yampi.me/assets/stores/divinuss2/uploads/images/coleira-personalizada-pet-com-nome-e-telefone-verde-pp-65e0bb9fee98b-large.jpg" alt="Coleira com Nome">
+        <h3>Coleira Personalizada</h3>
+        <p>R$ 59,90</p>
+        <button onclick="addToCart('Coleira Personalizada', 59.90)">Adicionar ao Carrinho</button>
+        <br><a href="produto2.html">Ver mais</a>
+      </div>
+
+      <div class="product">
+        <img src="https://cdn.vnda.com.br/casarigo/2024/02/10/10_37_52_572_10_2_9_928_rigo20fev242025.jpg?v=1707572277" alt="Comedouro Automático">
+        <h3>Comedouro Automático</h3>
+        <p>R$ 149,90</p>
+        <button onclick="addToCart('Comedouro Automático', 149.90)">Adicionar ao Carrinho</button>
+        <br><a href="produto3.html">Ver mais</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 PetLovers Club - Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Função para adicionar um produto ao carrinho
+    function addToCart(produto, preco) {
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const existente = carrinho.find(item => item.nome === produto);
+
+      if (existente) {
+        existente.qtd += 1; // Se o produto já estiver no carrinho, aumente a quantidade
+      } else {
+        carrinho.push({ nome: produto, preco: preco, qtd: 1 }); // Caso contrário, adicione o produto ao carrinho
+      }
+
+      // Atualiza o carrinho no localStorage
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+      alert(`"${produto}" foi adicionado ao carrinho!`);
+      atualizarContador(); // Atualiza o contador de itens no carrinho
+    }
+
+    // Função para atualizar o contador de itens no carrinho
+    function atualizarContador() {
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const total = carrinho.reduce((soma, item) => soma + item.qtd, 0);
+      document.getElementById("cart-count").innerText = total; // Atualiza o número de itens no carrinho
+    }
+
+    // Função de redirecionamento para a página de checkout
+    function finalizarCompra() {
+      // Verifica se o carrinho tem itens
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+      } else {
+        window.location.href = 'checkout.html'; // Redireciona para a página de checkout
+      }
+    }
+
+    // Atualiza o contador ao carregar a página
+    window.onload = atualizarContador;
+  </script>
+
+  <!-- Botão de Finalizar Compra -->
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="finalizarCompra()" class="finalizar-compra">Finalizar Compra</button>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - PetLovers Club</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .checkout-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .checkout-item h4 {
+      margin-bottom: 5px;
+    }
+    .checkout-item p {
+      font-size: 0.9rem;
+    }
+    .total {
+      text-align: right;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .input-field {
+      margin: 15px 0;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .checkout-btn {
+      margin-top: 20px;
+      display: block;
+      padding: 12px;
+      width: 100%;
+      background-color: #ff8c00;
+      color: white;
+      border: none;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .checkout-btn:hover {
+      background-color: #e07b00;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐾 PetLovers Club</h1>
+    <nav>
+      <a href="index.html">Voltar à Loja</a>
+    </nav>
+  </header>
+
+  <div class="checkout-container">
+    <h2>Resumo da Compra</h2>
+    <div id="checkout-items"></div>
+
+    <p class="total">Total: R$ <span id="checkout-total">0.00</span></p>
+
+    <h3>Informações de Pagamento</h3>
+    <form id="checkout-form">
+      <input type="text" id="name" class="input-field" placeholder="Seu nome completo" required />
+      <input type="email" id="email" class="input-field" placeholder="Seu email" required />
+      <input type="text" id="address" class="input-field" placeholder="Seu endereço" required />
+      <input type="text" id="card" class="input-field" placeholder="Número do cartão (simulação)" required />
+      <button type="button" class="checkout-btn" onclick="finalizarCompra()">Finalizar Compra</button>
+    </form>
+  </div>
+
+  <script>
+    const checkoutItemsContainer = document.getElementById("checkout-items");
+    const checkoutTotal = document.getElementById("checkout-total");
+
+    // Função para carregar os itens do carrinho no checkout
+    function carregarCarrinhoCheckout() {
+      const cart = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let total = 0;
+      checkoutItemsContainer.innerHTML = "";
+
+      if (cart.length === 0) {
+        checkoutItemsContainer.innerHTML = "<p>Seu carrinho está vazio.</p>";
+      } else {
+        cart.forEach((item, index) => {
+          total += item.preco * item.qtd;
+          const div = document.createElement("div");
+          div.className = "checkout-item";
+          div.innerHTML = `
+            <div>
+              <h4>${item.nome}</h4>
+              <p>Preço: R$ ${item.preco.toFixed(2)}</p>
+              <p>Qtd: ${item.qtd}</p>
+            </div>
+          `;
+          checkoutItemsContainer.appendChild(div);
+        });
+      }
+
+      checkoutTotal.innerText = total.toFixed(2);
+    }
+
+    // Função para finalizar a compra
+    function finalizarCompra() {
+      const cart = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const card = document.getElementById("card").value;
+
+      if (!name || !email || !address || !card) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      alert(`Obrigado pela compra, ${name}!\nProdutos: ${cart.length} item(s)\nTotal: R$ ${checkoutTotal.innerText}\nEnviaremos a confirmação para ${email}.\nEnviamos o pedido para o endereço: ${address}`);
+
+      localStorage.removeItem("carrinho");
+      window.location.href = "index.html";
+    }
+
+    carregarCarrinhoCheckout();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho - PetLovers Club</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .cart-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .cart-item h4 {
+      margin-bottom: 5px;
+    }
+    .cart-item input {
+      width: 40px;
+      text-align: center;
+    }
+    .total {
+      text-align: right;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .checkout-btn {
+      margin-top: 20px;
+      display: block;
+      padding: 12px;
+      width: 100%;
+      background-color: #ff8c00;
+      color: white;
+      border: none;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .checkout-btn:hover {
+      background-color: #e07b00;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐾 PetLovers Club</h1>
+    <nav>
+      <a href="index.html">Voltar à Loja</a>
+    </nav>
+  </header>
+
+  <div class="cart-container">
+    <h2>Seu Carrinho</h2>
+    <div id="cart-items"></div>
+    <p class="total">Total: R$ <span id="cart-total">0.00</span></p>
+    <!-- Link para a página de checkout -->
+    <a href="checkout.html">
+      <button class="checkout-btn">Finalizar Compra</button>
+    </a>
+  </div>
+
+  <script>
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+
+    // Função para carregar os itens no carrinho
+    function carregarCarrinho() {
+      const cart = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let total = 0;
+      cartItemsContainer.innerHTML = "";  // Limpa a área do carrinho antes de carregar os itens
+
+      cart.forEach((item, index) => {
+        total += item.preco * item.qtd;
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <div>
+            <h4>${item.nome}</h4>
+            <p>Preço: R$ ${item.preco.toFixed(2)}</p>
+          </div>
+          <div>
+            <label>Qtd: 
+              <input type="number" min="1" value="${item.qtd}" onchange="atualizarQtd(${index}, this.value)">
+            </label>
+            <button onclick="removerItem(${index})">🗑️</button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+
+      cartTotal.innerText = total.toFixed(2);
+    }
+
+    // Função para atualizar a quantidade de um item no carrinho
+    function atualizarQtd(index, novaQtd) {
+      const cart = JSON.parse(localStorage.getItem("carrinho")) || [];
+      cart[index].qtd = parseInt(novaQtd);
+      localStorage.setItem("carrinho", JSON.stringify(cart));
+      carregarCarrinho();
+    }
+
+    // Função para remover um item do carrinho
+    function removerItem(index) {
+      const cart = JSON.parse(localStorage.getItem("carrinho")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("carrinho", JSON.stringify(cart));
+      carregarCarrinho();
+    }
+
+    // Carregar os itens do carrinho ao carregar a página
+    carregarCarrinho();
+  </script>
+
+</body>
+</html>
